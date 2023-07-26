@@ -1,33 +1,73 @@
 import React, { useEffect, useState } from 'react';
-import { aggregateCrimes } from '../api';
-import CrimeChart from '../components/CrimeChart'; // You should replace this with your actual chart component
+import { aggregateCrimes, getYearRange } from '../api';
+import Plot from 'react-plotly.js';
+import YearSlider from '../components/YearSelector';
 
 const AggregatePage = () => {
-    const [field, setField] = useState('Violent crime total');
+    const [year, setYear] = useState(2011);
     const [data, setData] = useState([]);
+    const [minYear, setMinYear] = useState(1900);
+    const [maxYear, setMaxYear] = useState(new Date().getFullYear());
 
     useEffect(() => {
-        aggregateCrimes(field)
+        getYearRange()
             .then((response) => {
-                setData(response.data);
-                console.log("Aggregate results:", response.data);
+                setMinYear(Math.floor(response.data.min_year));
+                setMaxYear(Math.floor(response.data.max_year));
+            })
+            .catch((error) => {
+                console.error("Error getting year range:", error);
+            });
+
+        aggregateCrimes(year)
+            .then((response) => {
+                setData(transformData(response.data.hits[0]));
             })
             .catch((error) => {
                 console.error("Error aggregating crime data:", error);
             });
-    }, [field]);
+    }, [year]);
+
+    // Function to transform data
+    const transformData = (rawData) => {
+        if (rawData === undefined || rawData === null || rawData.length === 0) {
+            return [];
+        }
+        return Object.entries(rawData._source)
+            .filter(([key, value]) => value !== "" && !isNaN(value) && (key != "Population" && key != "Year")) // filter non-numerical fields
+            .map(([key, value]) => ({ x: key, y: Number(value) })); // convert to the { x, y } format
+    };
+    const processedData = data.map((item, index) => {
+        return {
+            x: [item.x],
+            y: [item.y],
+            type: 'bar',
+            marker: { color: `hsl(${(index * 360 / data.length)}, 100%, 50%)` },
+            name: item.x,
+        };
+    });
 
     return (
         <div>
             <h1>Aggregate Page</h1>
-            <select value={field} onChange={(e) => setField(e.target.value)}>
-                {/* You should replace these options with your actual field names */}
-                <option value="Violent crime total">Violent crime total</option>
-                <option value="Murder and nonnegligent Manslaughter">Murder and nonnegligent Manslaughter</option>
-                <option value="Robbery">Robbery</option>
-                <option value="Aggravated assault">Aggravated assault</option>
-            </select>
-            <CrimeChart data={data} />
+            <YearSlider minYear={minYear} maxYear={maxYear} year={year} setYear={setYear} />
+            <br />
+            <Plot
+                data={processedData}
+                layout={{
+                    autosize: true,
+                    xaxis: {
+                        title: 'Types of Crimes',
+                        showticklabels: false,
+                    },
+                    yaxis: {
+                        title: 'Cases'
+                    },
+                    barmode: 'stack'
+                }}
+                useResizeHandler={true}
+                style={{ width: "100%", height: "100%" }}
+            />
         </div>
     );
 };

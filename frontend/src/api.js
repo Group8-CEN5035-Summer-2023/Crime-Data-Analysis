@@ -6,7 +6,9 @@ const api = axios.create({
 });
 
 export const getAllCrimes = () => api.get('/crimes');
+export const getYearRange = () => api.get('/crimes/year-range');
 export const searchCrimes = (query) => api.post('/search-crimes', { query });
-export const aggregateCrimes = (field) => api.get(`/aggregate-crimes/${field}`);
+export const aggregateCrimes = (field) => api.get(`/crimes/${field}`);
+export const getPopulation = () => api.get(`/population`);
 
 // add more functions if necessary

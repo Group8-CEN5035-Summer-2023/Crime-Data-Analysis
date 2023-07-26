@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -8,7 +7,6 @@ import {
 } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
-import SearchPage from "./pages/SearchPage";
 import AggregatePage from "./pages/AggregatePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -16,6 +14,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import Population from './pages/Population';
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -40,7 +39,7 @@ const App = () => {
             <Navbar />
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/search" element={<SearchPage />} />
+              <Route path="/population" element={<Population />} />
               <Route path="/aggregate" element={<AggregatePage />} />
             </Routes>
           </>

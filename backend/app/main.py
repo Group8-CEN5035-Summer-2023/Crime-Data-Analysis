@@ -27,16 +27,32 @@ es = Elasticsearch(
 
 
 index_name = 'crime-data'
+mapping = {
+    'mappings': {
+        'properties': {
+            'Year': {'type': 'integer'},
+            # add other fields here as necessary
+        }
+    }
+}
+
+
+def delete_data():
+    if es.indices.exists(index=index_name):
+        es.indices.delete(index=index_name)
 
 
 def load_data():
+    # Create index with correct mapping if it doesn't exist
     if not es.indices.exists(index=index_name):
-        # Open your csv file
-        with open('crime.csv', newline='') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                # Index each row into Elasticsearch
-                es.index(index=index_name, body=row)
+        es.indices.create(index=index_name, body=mapping)
+
+    # Open your csv file
+    with open('./crime.csv', newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            row['Year'] = int(row['Year'])
+            es.index(index=index_name, body=row)
 
 
 @app.get("/")
@@ -54,6 +70,15 @@ async def load_data_route():
     else:
         return {"message": "Elasticsearch is not available"}
     return {"message": "Data loaded"}
+
+
+@app.get("/delete-data")
+async def delete_data_route():
+    if es.ping():  # Test connection
+        delete_data()  # Delete data
+        return {"message": "Data deleted"}
+    else:
+        return {"message": "Elasticsearch is not available"}
 
 
 @app.get("/crimes")
@@ -121,3 +146,80 @@ def aggregate_crimes(field: str):
         return {"error": "Error in the request. Please check your query."}
     except Exception as e:
         return {"error": str(e)}
+
+
+@app.get("/crimes/year-range")
+async def get_year_range():
+    query = {
+        "aggs": {
+            "min_year": {
+                "min": {"field": "Year"}
+            },
+            "max_year": {
+                "max": {"field": "Year"}
+            }
+        }
+    }
+    try:
+        # size=0 because we only care about the aggregation result
+        response = es.search(index="crime-data", body=query, size=0)
+        return {
+            'min_year': response['aggregations']['min_year']['value'],
+            'max_year': response['aggregations']['max_year']['value']
+        }
+    except NotFoundError:
+        return {"error": "Index not found"}
+    except RequestError as e:
+        print(str(e))
+        return {"error": "Error in the request. Please check your query."}
+    except Exception as e:
+        print(str(e))
+        return {"error": str(e)}
+
+
+@app.get("/population")
+async def get_population():
+    query = {
+        "_source": ["Year", "Population"],
+        "query": {
+            "match_all": {}
+        },
+        "sort": [
+            {
+                "Year": {"order": "asc"}
+            }
+        ]
+    }
+    try:
+        response = es.search(index="crime-data", body=query, size=10000)
+        return response['hits']
+    except NotFoundError:
+        raise HTTPException(status_code=404, detail="Index not found")
+    except RequestError:
+        raise HTTPException(
+            status_code=400, detail="Error in the request. Please check your query.")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/crimes/{year}")
+async def get_crimes_by_year(year: int):
+    query = {
+        "_source_excludes": ["*rate*"],
+        "query": {
+            "match": {
+                "Year": year
+            }
+        },
+    }
+    try:
+        response = es.search(index="crime-data", body=query, size=10000)
+        # print(response)
+        return response['hits']
+    except NotFoundError:
+        raise HTTPException(status_code=404, detail="Index not found")
+    except RequestError:
+        raise HTTPException(
+            status_code=400, detail="Error in the request. Please check your query.")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
