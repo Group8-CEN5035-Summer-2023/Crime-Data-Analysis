@@ -1,22 +1,38 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
+
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 
 const Navbar = () => {
-    return (
-        <nav>
-            <ul>
-                <li>
-                    <Link to="/">Home</Link>
-                </li>
-                <li>
-                    <Link to="/search">Search</Link>
-                </li>
-                <li>
-                    <Link to="/aggregate">Aggregate</Link>
-                </li>
-            </ul>
-        </nav>
-    );
+  const logout = () => {
+    signOut(auth);
+  };
+
+  return (
+    <nav>
+      <ul>
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/search">Search</Link>
+        </li>
+        <li>
+          <Link to="/aggregate">Aggregate</Link>
+        </li>
+        <li>
+          <button
+            onClick={() => {
+              logout();
+            }}
+          >
+            Logout
+          </button>
+        </li>
+      </ul>
+    </nav>
+  );
 };
 
 export default Navbar;

@@ -12,14 +12,14 @@ services:
         aliases:
           - elasticsearch
 
-  fastapi:
-    build: ./backend
-    ports:
-      - 8000:8000
-    depends_on:
-      - elasticsearch
+  # fastapi:
+  #   build: ./backend
+  #   ports:
+  #     - 8000:8000
+  #   depends_on:
+  #     - elasticsearch
 
-  react:
-    build: ./frontend
-    ports:
-      - 3000:3000
+  # react:
+  #   build: ./frontend
+  #   ports:
+  #     - 3000:3000

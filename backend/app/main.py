@@ -19,7 +19,7 @@ app.add_middleware(
 
 es = Elasticsearch(
     hosts=[{
-        'host': 'elasticsearch',
+        'host': 'localhost',
         'port': 9200,
         'scheme': 'http'
     }]

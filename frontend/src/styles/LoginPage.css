@@ -1,0 +1,51 @@
+.TextField {
+  border-radius: 10px;
+  height: 30px;
+  width: 200px;
+  margin: 0px 20px;
+  border: 1px solid black;
+  outline: 0;
+  padding: 0px 10px;
+}
+
+.TextField:focus-visible {
+  outline: 0;
+}
+
+.Login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: calc(80vh);
+}
+
+.LoginButton {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.LoginButton button {
+  height: 35px;
+  width: 200px;
+  text-transform: uppercase;
+  font-family: Ubuntu;
+  font-size: 17px;
+  cursor: pointer;
+  background-color: rgb(8, 172, 87);
+  border: 1px solid black;
+  color: white;
+  border-radius: 5px;
+}
+
+.RegisterMsg {
+  font-size: 15px;
+  margin-top: 10px;
+  font-weight: 500;
+  color: rgb(0, 89, 255);
+  cursor: pointer;
+}
+
+.RegisterMsg:hover {
+  text-decoration: underline;
+}
