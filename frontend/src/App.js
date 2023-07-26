@@ -1,12 +1,21 @@
-// src/App.js
 import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import HomePage from './pages/HomePage';
+import SearchPage from './pages/SearchPage';
+import AggregatePage from './pages/AggregatePage';
 
-function App() {
+const App = () => {
   return (
-    <div>
-      <h1>Hello, World!</h1>
-    </div>
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/search" element={<SearchPage />} />
+        <Route path="/aggregate" element={<AggregatePage />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
