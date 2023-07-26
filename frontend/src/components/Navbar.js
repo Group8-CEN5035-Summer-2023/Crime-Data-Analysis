@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import "../styles/Navbar.css";
+
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 
@@ -11,18 +13,25 @@ const Navbar = () => {
 
   return (
     <nav>
-      <ul>
+      <ul className="NavList">
         <li>
-          <Link to="/">Home</Link>
+          <Link className="NavLink" to="/">
+            Home
+          </Link>
         </li>
         <li>
-          <Link to="/population">Population</Link>
+          <Link className="NavLink" to="/population">
+            Population
+          </Link>
         </li>
         <li>
-          <Link to="/aggregate">Aggregate</Link>
+          <Link className="NavLink" to="/aggregate">
+            Aggregate
+          </Link>
         </li>
         <li>
           <button
+            className="LogoutButton"
             onClick={() => {
               logout();
             }}

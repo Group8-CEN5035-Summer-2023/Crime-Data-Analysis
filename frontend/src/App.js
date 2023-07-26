@@ -14,7 +14,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import Population from './pages/Population';
+import Population from "./pages/Population";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -36,11 +36,13 @@ const App = () => {
       <Router>
         {user ? (
           <>
+            <h2>Crime Data Analysis</h2>
             <Navbar />
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/population" element={<Population />} />
               <Route path="/aggregate" element={<AggregatePage />} />
+              <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </>
         ) : (
