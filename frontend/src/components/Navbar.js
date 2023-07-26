@@ -30,6 +30,11 @@ const Navbar = () => {
           </Link>
         </li>
         <li>
+          <Link className="NavLink" to="/piecharts">
+            PieCharts
+          </Link>
+        </li>
+        <li>
           <button
             className="LogoutButton"
             onClick={() => {

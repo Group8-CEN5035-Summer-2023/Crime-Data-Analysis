@@ -8,6 +8,7 @@ import {
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import AggregatePage from "./pages/AggregatePage";
+import PieCharts from "./pages/PieCharts";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -42,6 +43,7 @@ const App = () => {
               <Route path="/" element={<HomePage />} />
               <Route path="/population" element={<Population />} />
               <Route path="/aggregate" element={<AggregatePage />} />
+              <Route path="/piecharts" element={<PieCharts />} />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </>
