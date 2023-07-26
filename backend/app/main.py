@@ -180,7 +180,7 @@ async def get_year_range():
 @app.get("/population")
 async def get_population():
     query = {
-        "_source": ["Year", "Population"],
+        "_source": ["Year", "Population", "Violent crime total", "Property crime total"],
         "query": {
             "match_all": {}
         },

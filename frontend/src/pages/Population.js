@@ -1,42 +1,72 @@
 import React, { useEffect, useState } from 'react';
-import { getPopulation } from '../api';
+import { getPopulation, getCrimeData } from '../api';
 import Plot from 'react-plotly.js';
 
-const Population = () => {
+const PopulationAndCrime = () => {
     const [data, setData] = useState([]);
 
-    const transformData = (hits) => {
-        if (!Array.isArray(hits) || hits.length === 0) {
+    const transformData = (populationHits) => {
+        if (!Array.isArray(populationHits) || populationHits.length === 0) {
             return [];
         }
 
-        return hits.map(hit => {
+        return populationHits.map((hit, i) => {
             const { Year, Population } = hit._source;
-            return { x: Year, y: Number(Population) };
+            const { 'Violent crime total': violentCrime, 'Property crime total': propertyCrime } = hit._source;
+            const totalCrime = Number(violentCrime) + Number(propertyCrime);
+            return {
+                x: Year,
+                yPopulation: Number(Population),
+                yViolentCrime: Number(violentCrime),
+                yPropertyCrime: Number(propertyCrime),
+                yTotalCrime: totalCrime,
+            };
         });
     };
 
     useEffect(() => {
-        getPopulation()
-            .then((response) => {
-                setData(transformData(response.data.hits));
+        Promise.all([getPopulation()])
+            .then(([populationResponse]) => {
+                setData(transformData(populationResponse.data.hits));
             })
             .catch((error) => {
-                console.error("Error getting population data:", error);
+                console.error("Error getting data:", error);
             });
     }, []);
 
     return (
         <div>
-            <h1>Population</h1>
+            <h1>Population and Crime</h1>
             <Plot
                 data={[
                     {
                         x: data.map(item => item.x),
-                        y: data.map(item => item.y),
+                        y: data.map(item => item.yPopulation),
                         type: 'scatter',
-                        mode: 'lines+markers'
-                    }
+                        mode: 'lines+markers',
+                        name: 'Population',
+                    },
+                    {
+                        x: data.map(item => item.x),
+                        y: data.map(item => item.yViolentCrime),
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        name: 'Violent Crime',
+                    },
+                    {
+                        x: data.map(item => item.x),
+                        y: data.map(item => item.yPropertyCrime),
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        name: 'Property Crime',
+                    },
+                    {
+                        x: data.map(item => item.x),
+                        y: data.map(item => item.yTotalCrime),
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        name: 'Total Crime',
+                    },
                 ]}
                 layout={{
                     autosize: true,
@@ -45,9 +75,9 @@ const Population = () => {
                         type: 'date',
                     },
                     yaxis: {
-                        title: 'Population',
+                        title: 'Count',
                     },
-                    title: 'Population of the LA',
+                    title: 'Population and Crime in LA',
                 }}
                 useResizeHandler={true}
                 style={{ width: "100%", height: "100%" }}
@@ -56,4 +86,4 @@ const Population = () => {
     )
 }
 
-export default Population;
+export default PopulationAndCrime;
