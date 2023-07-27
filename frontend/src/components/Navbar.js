@@ -14,24 +14,24 @@ const Navbar = () => {
   return (
     <nav>
       <ul className="NavList">
-        <li>
+        {/* <li>
           <Link className="NavLink" to="/">
             Home
           </Link>
-        </li>
+        </li> */}
         <li>
-          <Link className="NavLink" to="/population">
-            Population
+          <Link className="NavLink" to="/crime-trends">
+            Crime Trends
           </Link>
         </li>
         <li>
-          <Link className="NavLink" to="/aggregate">
-            Aggregate
+          <Link className="NavLink" to="/distribution">
+            Crime Distribution
           </Link>
         </li>
         <li>
-          <Link className="NavLink" to="/piecharts">
-            PieCharts
+          <Link className="NavLink" to="/analysis">
+            Analysis
           </Link>
         </li>
         <li>

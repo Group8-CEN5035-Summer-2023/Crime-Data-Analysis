@@ -1,14 +1,10 @@
-// api.js
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000', // change to your FastAPI server address
+  baseURL: "http://localhost:8000",
 });
 
-export const getAllCrimes = () => api.get('/crimes');
-export const getYearRange = () => api.get('/crimes/year-range');
-export const searchCrimes = (query) => api.post('/search-crimes', { query });
+export const getAllCrimes = () => api.get("/crimes");
+export const getYearRange = () => api.get("/crimes/year-range");
 export const aggregateCrimes = (field) => api.get(`/crimes/${field}`);
-export const getPopulation = () => api.get(`/population`);
-
-// add more functions if necessary
+export const getPopulation = () => api.get("/crime-trends");

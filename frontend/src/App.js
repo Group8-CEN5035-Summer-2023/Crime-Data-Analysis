@@ -7,15 +7,17 @@ import {
 } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
-import AggregatePage from "./pages/AggregatePage";
-import PieCharts from "./pages/PieCharts";
+import DistributionPage from "./pages/DistributionPage";
+import Analysis from "./pages/Analysis";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ForgotPassword from "./pages/ForgotPassword";
 
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import Population from "./pages/Population";
+import CrimeTrends from "./pages/CrimeTrends";
+
+import "./App.css";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -39,12 +41,13 @@ const App = () => {
           <>
             <h2>Crime Data Analysis</h2>
             <Navbar />
+            <hr style={{ width: "max(60vw, 600px)" }} />
             <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/population" element={<Population />} />
-              <Route path="/aggregate" element={<AggregatePage />} />
-              <Route path="/piecharts" element={<PieCharts />} />
-              <Route path="*" element={<Navigate to="/" />} />
+              {/* <Route path="/" Crimeelement={<HomePage />} /> */}
+              <Route path="/crime-trends" element={<CrimeTrends />} />
+              <Route path="/distribution" element={<DistributionPage />} />
+              <Route path="/analysis" element={<Analysis />} />
+              <Route path="*" element={<Navigate to="/crime-trends" />} />
             </Routes>
           </>
         ) : (
@@ -53,6 +56,7 @@ const App = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         )}
       </Router>

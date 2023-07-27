@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { getAllCrimes } from '../api';
-import CrimeChart from '../components/CrimeChart'; // You should replace this with your actual chart component
+import React, { useEffect, useState } from "react";
+import { getAllCrimes } from "../api";
+import CrimeChart from "../components/CrimeChart";
 
 const HomePage = () => {
   const [data, setData] = useState([]);
